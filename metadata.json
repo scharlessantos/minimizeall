@@ -1,1 +1,7 @@
-{"shell-version": ["3.6","3.8","3.10"], "uuid": "minimizeall@scharlessantos.org", "name": "Minimize All", "description": "Minimize all windows in current workspace"}
+{
+ "shell-version": ["3.6","3.8","3.10"], 
+ "uuid": "minimizeall@scharlessantos.org", 
+ "name": "Minimize All", 
+ "description": "Minimize all windows in current workspace",
+ "url": "https://github.com/scharlessantos/minimizeall"
+}
