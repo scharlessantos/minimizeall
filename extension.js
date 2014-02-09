@@ -3,9 +3,15 @@ const St = imports.gi.St;
 const Main = imports.ui.main;
 const Tweener = imports.ui.tweener;
 const Shell = imports.gi.Shell;
+const ExtensionUtils = imports.misc.extensionUtils;
+const Meta = ExtensionUtils.getCurrentExtension();
+const Utils = Meta.imports.utils;
+const Lang = imports.lang;
 
+const Gettext = imports.gettext.domain('minimizeall');
+const _ = Gettext.gettext;
 
-let text, button;
+let text, button, settings;
 
 function _hide() {
     Main.uiGroup.remove_actor(text);
@@ -29,7 +35,7 @@ function _notify() {
                      { opacity: 0,
                        time: 8,
                        transition: 'easeOutQuad',
-                       onComplete: _hide});
+                      onComplete: _hide});
 }
 
 function _minimize() {
@@ -61,6 +67,9 @@ function init(extensionMeta) {
 
     button.set_child(icon);
     button.connect('button-press-event', _minimize);
+
+    settings = Utils.getSettings(Meta);
+    Utils.initTranslations("minimizeall");
 }
 
 function enable() {
