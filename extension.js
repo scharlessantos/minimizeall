@@ -1,15 +1,33 @@
+/*
+  Copyright (c) 2013-2014, Charles Santos Silva (silva.charlessantos@gmail.com)
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY
+  DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
 const St = imports.gi.St;
 const Main = imports.ui.main;
 const Tweener = imports.ui.tweener;
 const Shell = imports.gi.Shell;
-const ExtensionUtils = imports.misc.extensionUtils;
-const Meta = ExtensionUtils.getCurrentExtension();
-const Utils = Meta.imports.utils;
-const Lang = imports.lang;
 
-const Gettext = imports.gettext.domain('minimizeall');
-const _ = Gettext.gettext;
+let extension = imports.misc.extensionUtils.getCurrentExtension();
+const convenience = extension.imports.convenience;
 
 let text, button, settings;
 
@@ -19,23 +37,33 @@ function _hide() {
 }
 
 function _notify() {
-    if (!text) {
-        text = new St.Label({ style_class: 'notify-label', text: "Showing desktop for current workspace" });
-        Main.uiGroup.add_actor(text);
-    }
+    if (isShowMessage()){
+	let msg = "Showing desktop for current workspace";
 
-    text.opacity = 255;
+	if (isMessageTweener()){
 
-    let monitor = Main.layoutManager.primaryMonitor;
+	
+	    if (!text) {
+		text = new St.Label({ style_class: 'notify-label', text: msg });
+		Main.uiGroup.add_actor(text);
+	    }
 
-    text.set_position(Math.floor(monitor.width / 2 - text.width / 2),
-                      Math.floor(monitor.height / 2 - text.height / 2));
+	    text.opacity = 255;
 
-    Tweener.addTween(text,
-                     { opacity: 0,
-                       time: 8,
-                       transition: 'easeOutQuad',
-                      onComplete: _hide});
+	    let monitor = Main.layoutManager.primaryMonitor;
+
+	    text.set_position(Math.floor(monitor.width / 2 - text.width / 2),
+		              Math.floor(monitor.height / 2 - text.height / 2));
+
+	    Tweener.addTween(text,
+		             { opacity: 0,
+		               time: 8,
+		               transition: 'easeOutQuad',
+		              onComplete: _hide});
+	} else 
+   	    Main.notify(msg);
+   }
+
 }
 
 function _minimize() {
@@ -53,6 +81,8 @@ function _minimize() {
 }
 
 function init(extensionMeta) {
+    settings = convenience.getSettings(extension);
+
     let theme = imports.gi.Gtk.IconTheme.get_default();
     theme.append_search_path(extensionMeta.path + "/icons");
 
@@ -67,9 +97,16 @@ function init(extensionMeta) {
 
     button.set_child(icon);
     button.connect('button-press-event', _minimize);
+}
 
-    settings = Utils.getSettings(Meta);
-    Utils.initTranslations("minimizeall");
+function isShowMessage(){
+    let msgtype = settings.get_string('message');
+    return !(msgtype == 'none');
+}
+
+function isMessageTweener(){
+    let msgtype = settings.get_string('message');
+    return msgtype == 'tweener';
 }
 
 function enable() {
