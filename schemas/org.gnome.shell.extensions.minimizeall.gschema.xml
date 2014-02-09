@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="org-gnome-shell-extension-minimizeall">
+	<schema path="/org/gnome/shell/extensions/minimizeall/" id="org.gnome.shell.extensions.minimizeall">
+		<key name="message" type="s">
+			<default>'tweener'</default>
+			<summary>Message style</summary>
+			<description>Set tweener value to display message as Tweener, set notifica value to display message as a Notification, or none for no message</description>
+		</key>
+	</schema>
+</schemalist>
