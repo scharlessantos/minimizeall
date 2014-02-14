@@ -29,6 +29,9 @@ const Shell = imports.gi.Shell;
 let extension = imports.misc.extensionUtils.getCurrentExtension();
 const convenience = extension.imports.convenience;
 
+const Gettext = imports.gettext.domain('minimizeall');
+const _ = Gettext.gettext;
+
 let text, button, settings;
 
 function _hide() {
@@ -38,7 +41,7 @@ function _hide() {
 
 function _notify() {
     if (isShowMessage()){
-	let msg = "Showing desktop for current workspace";
+	let msg = _("Showing desktop from current workspace");
 
 	if (isMessageTweener()){
 
@@ -82,6 +85,7 @@ function _minimize() {
 
 function init(extensionMeta) {
     settings = convenience.getSettings(extension);
+	convenience.initTranslations("minimizeall");
 
     let theme = imports.gi.Gtk.IconTheme.get_default();
     theme.append_search_path(extensionMeta.path + "/icons");
