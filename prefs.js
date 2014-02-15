@@ -32,19 +32,23 @@ const MESSAGE_TWEENER = 'tweener';
 const MESSAGE_NOTIFICATION = 'notifica';
 const MESSAGE_NONE = 'none';
 
+const Gettext = imports.gettext.domain('minimizeall');
+const _ = Gettext.gettext;
+
 let settings;
 
 function init() {
 	settings = convenience.getSettings(extension);
+	convenience.initTranslations("minimizeall");
 }
 
 function buildPrefsWidget() {
 	let frame = new Gtk.Box({orientation: Gtk.Orientation.VERTICAL,
 		border_width: 10, margin: 20});
 
-	frame.add(_createComboBox('message', "Show alert message as", "How show message \"Showing desktop from current workspace\"",
-			{'tweener': "Tweener", 'notifica' : "Notification", 'none' : "None"}));
-	
+	frame.add(_createComboBox('message', _("Show alert message as"), _("How to show message \"Showing desktop from current workspace\""),
+{'tweener': _("Tweener"), 'notifica' : _("Notification"), 'none' : _("None")}));
+
 	frame.show_all();
 	return frame;
 }
