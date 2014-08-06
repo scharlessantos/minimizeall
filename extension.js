@@ -71,12 +71,12 @@ function _notify() {
 
 function _minimize() {
     _notify();
-        let activeWorkspace = global.screen.get_active_workspace();
-    let tracker = Shell.WindowTracker.get_default();
+    
+    let activeWorkspace = global.screen.get_active_workspace();
     let windows = activeWorkspace.list_windows();
     for (let i = 0; i < windows.length; i++) {
-           //New in V3&4: tracker.is_window_interesting checks whether this is a real window and not a desktop icon
-           if (!windows[i].minimized && tracker.is_window_interesting(windows[i])) {
+	   //Gnome 3.12 removed tracker.is_window_interesting, now uses !window.skip_taskbar
+           if (!windows[i].minimized && !windows[i].skip_taskbar) {
 	       windows[i].minimize();
            }
     }
